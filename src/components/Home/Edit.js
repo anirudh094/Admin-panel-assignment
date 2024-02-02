@@ -35,8 +35,10 @@ export class Edit extends React.Component {
       }
     });
   }
-  
- 
+
+  //  componentDidUpdate(){
+  //   this.selectData();
+  //  }
 
   render() {
     return (
@@ -84,6 +86,9 @@ export class Edit extends React.Component {
 
             <div className={styles.footer}>
               <b className={styles.error}>{this.state.errorMsg}</b>
+              <button id="selectBtn" onClick={this.interface}>
+                Select Data
+              </button>
               <button id="editBtn" onClick={this.interface}>
                 Edit Data
               </button>
@@ -101,6 +106,9 @@ export class Edit extends React.Component {
     if (id === "editBtn") {
       this.updateData();
     }
+    else if (id === "selectBtn") {
+      this.selectData();
+    }
   }
 
   getAllInputs() {
@@ -110,7 +118,6 @@ export class Edit extends React.Component {
       dob: this.state.dob,
     };
   }
-
 
   //To update the data
   updateData() {
@@ -138,20 +145,24 @@ export class Edit extends React.Component {
     }
   }
 
+
   //For Selecting Required Data
   selectData() {
     const dbref = ref(this.state.db);
     const username = this.state.userName;
 
-    get(child(dbref, "Accounts/" + username)).then((snapshot) => {
-      if (snapshot.exists()) {
-        this.setState({
-          fullname: snapshot.val().Fullname,
-          phonenumber: snapshot.val().Phonenumber,
-          dob: snapshot.val().dateofbirth,
-        })
-      }
-    })
-    .catch((error) =>{alert ("there was an error, details: "+error)});
+    get(child(dbref, "Accounts/" + username))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          this.setState({
+            fullname: snapshot.val().Fullname,
+            phonenumber: snapshot.val().Phonenumber,
+            dob: snapshot.val().dateofbirth,
+          });
+        }
+      })
+      .catch((error) => {
+        alert("there was an error, details: " + error);
+      });
   }
 }
